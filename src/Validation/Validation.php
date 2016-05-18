@@ -3,23 +3,52 @@
 namespace Buuum;
 
 
-use Symfony\Component\HttpFoundation\File\File;
-
 class Validation
 {
 
+    /**
+     * @var bool
+     */
     private $error = false;
+    /**
+     * @var array
+     */
     private $errors = [];
+    /**
+     * @var array
+     */
     private $apply_rules = [];
+    /**
+     * @var array|mixed
+     */
+    private $messages = [];
+    /**
+     * @var array|null
+     */
+    private $alias = [];
 
+    /**
+     * @var array
+     */
     private $special = ['required'];
 
-    public function __construct($rules, array $messages = null)
+    /**
+     * Validation constructor.
+     * @param $rules
+     * @param array|null $messages
+     * @param null $alias
+     */
+    public function __construct($rules, array $messages = null, $alias = null)
     {
         $this->parseRules($rules);
         $this->messages = $messages ?: include __DIR__ . '/messages.php';
+        $this->alias = $alias;
     }
 
+    /**
+     * @param $data
+     * @return bool
+     */
     public function validate($data)
     {
         //$data = $data;
@@ -46,6 +75,12 @@ class Validation
         return ($this->error) ? false : true;
     }
 
+    /**
+     * @param $fname
+     * @param $name
+     * @param $value
+     * @param null $key
+     */
     private function setError($fname, $name, $value, $key = null)
     {
         $message_key = str_replace('validate_', '', $fname);
@@ -55,7 +90,8 @@ class Validation
             $type = array_shift($value);
             $error = $error[$type];
         }
-        $error = str_replace(':attribute', $name, $error);
+        $alias = (!empty($this->alias[$name])) ? $this->alias[$name] : $name;
+        $error = str_replace(':attribute', $alias, $error);
         if ($value) {
             $error = str_replace(':value', implode(',', $value), $error);
         }
@@ -69,11 +105,17 @@ class Validation
 
     }
 
+    /**
+     * @return array
+     */
     public function getErrors()
     {
         return $this->errors;
     }
 
+    /**
+     * @param $rules
+     */
     protected function parseRules($rules)
     {
         foreach ($rules as $name => $rule) {
@@ -83,6 +125,10 @@ class Validation
         }
     }
 
+    /**
+     * @param $rules
+     * @return array
+     */
     private function getNameRules($rules)
     {
         $rules = explode('|', $rules);
@@ -101,19 +147,27 @@ class Validation
         return $p_rules;
     }
 
+    /**
+     * @param $value
+     * @return bool
+     */
     protected function validate_required($value)
     {
         if (is_null($value)) {
             return false;
         } elseif (is_string($value) && trim($value) === '') {
             return false;
-        } elseif ($value instanceof File) {
-            return (string)$value->getPath() != '';
         }
 
         return true;
     }
 
+    /**
+     * @param $value
+     * @param $data
+     * @param $param
+     * @return bool
+     */
     protected function validate_contains($value, $data, $param)
     {
 
@@ -130,6 +184,10 @@ class Validation
         return true;
     }
 
+    /**
+     * @param $value
+     * @return bool
+     */
     protected function validate_valid_email($value)
     {
         if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
@@ -139,16 +197,24 @@ class Validation
         return true;
     }
 
+    /**
+     * @param $value
+     * @param $data
+     * @param $param
+     * @return bool
+     */
     protected function validate_max($value, $data, $param)
     {
-        return $this->getSize($value) <= $param[1];
+        return $this->getSize($value) <= $param[0];
     }
 
+    /**
+     * @param $value
+     * @return int
+     */
     protected function getSize($value)
     {
-        if ($value instanceof File) {
-            return $value->getSize() / 1024;
-        } elseif (is_numeric($value)) {
+        if (is_numeric($value)) {
             return $value;
         } elseif (is_array($value)) {
             return count($value);
@@ -161,29 +227,37 @@ class Validation
         }
     }
 
+    /**
+     * @param $value
+     * @param $data
+     * @param $param
+     * @return bool
+     */
     protected function validate_min($value, $data, $param)
     {
-        return $this->getSize($value) > $param[1];
+        return $this->getSize($value) > $param[0];
     }
 
+    /**
+     * @param $value
+     * @param $data
+     * @param $param
+     * @return bool
+     */
     protected function validate_exact_len($value, $data, $param)
     {
-        $maxlen = (int)implode('', $param);
-
         if (function_exists('mb_strlen')) {
-            if (mb_strlen($value) == $maxlen) {
-                return false;
-            }
+            $value = mb_strlen($value);
         } else {
-
-            if (strlen($value) == $maxlen) {
-                return false;
-            }
+            $value = strlen($value);
         }
-
-        return true;
+        return $value == $param[0];
     }
 
+    /**
+     * @param $value
+     * @return bool
+     */
     protected function validate_alpha($value)
     {
         if (empty($value)) {
@@ -199,6 +273,10 @@ class Validation
         return true;
     }
 
+    /**
+     * @param $value
+     * @return bool
+     */
     protected function validate_alpha_space($value)
     {
         if (empty($value)) {
@@ -212,6 +290,10 @@ class Validation
         return true;
     }
 
+    /**
+     * @param $value
+     * @return bool
+     */
     protected function validate_alpha_dash($value)
     {
         if (empty($value)) {
@@ -225,6 +307,10 @@ class Validation
         return true;
     }
 
+    /**
+     * @param $value
+     * @return bool
+     */
     protected function validate_alpha_numeric($value)
     {
         if (empty($value)) {
@@ -238,6 +324,10 @@ class Validation
         return true;
     }
 
+    /**
+     * @param $value
+     * @return bool
+     */
     protected function validate_numeric($value)
     {
 
@@ -252,6 +342,10 @@ class Validation
         return true;
     }
 
+    /**
+     * @param $value
+     * @return bool
+     */
     protected function validate_integer($value)
     {
         if (empty($value)) {
