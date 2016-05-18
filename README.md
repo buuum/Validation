@@ -18,6 +18,11 @@ Buuum\validation is available on Packagist and can be installed using Composer:
 composer require buuum/validation
 ```
 
+### Manually
+
+You may use your own autoloader as long as it follows PSR-0 or PSR-4 standards. Just put src directory contents in your vendor directory.
+
+
 ### FILTERS
 
 * trim `Strip whitespace from the beginning and end of a string`
@@ -113,10 +118,6 @@ Array
 ```
 
  
-
-### Manually
-
-You may use your own autoloader as long as it follows PSR-0 or PSR-4 standards. Just put src directory contents in your vendor directory.
 
 
 
