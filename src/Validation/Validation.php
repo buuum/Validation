@@ -40,7 +40,7 @@ class Validation
      */
     public function __construct($rules, array $messages = null, $alias = null)
     {
-        $this->parseRules($rules);
+        $this->apply_rules = $this->parseRules($rules);
         $this->messages = $messages ?: include __DIR__ . '/messages.php';
         $this->alias = $alias;
     }
@@ -51,20 +51,24 @@ class Validation
      */
     public function validate($data)
     {
-        //$data = $data;
         foreach ($this->apply_rules as $name => $rules) {
+
             foreach ($rules as $filter_function => $params) {
 
                 if (!isset($data[$name])) {
-                    $this->setError($filter_function, $name, $params);
+                    if(array_key_exists('validate_required', $rules)){
+                        $this->setError($filter_function, $name, $params);
+                    }
                 } elseif (is_array($data[$name]) && !in_array($filter_function, $this->special)) {
                     foreach ($data[$name] as $key => $data_) {
-                        if (!$value = call_user_func(array($this, $filter_function), $data_, $data, $params)) {
+                        if(empty($data_) && !array_key_exists('validate_required', $rules)) {
+                        }elseif (!$value = call_user_func(array($this, $filter_function), $data_, $data, $params)) {
                             $this->setError($filter_function, $name, $params, $key);
                         }
                     }
                 } else {
-                    if (!$value = call_user_func(array($this, $filter_function), $data[$name], $data, $params)) {
+                    if(empty($data[$name]) && !array_key_exists('validate_required', $rules)) {
+                    }elseif (!$value = call_user_func(array($this, $filter_function), $data[$name], $data, $params)) {
                         $this->setError($filter_function, $name, $params);
                     }
                 }
@@ -113,16 +117,21 @@ class Validation
         return $this->errors;
     }
 
+
     /**
      * @param $rules
+     * @return array
      */
     protected function parseRules($rules)
     {
+        $apply_rules = [];
         foreach ($rules as $name => $rule) {
             if (!empty($rule)) {
-                $this->apply_rules[$name] = $this->getNameRules($rule);
+                $apply_rules[$name] = $this->getNameRules($rule);
             }
         }
+
+        return $apply_rules;
     }
 
     /**
@@ -318,6 +327,23 @@ class Validation
         }
 
         if (!preg_match('/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ])+$/i', $value) !== false) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $value
+     * @return bool
+     */
+    protected function validate_alpha_numeric_space($value)
+    {
+        if (empty($value)) {
+            return false;
+        }
+
+        if (!preg_match('/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\s])+$/i', $value) !== false) {
             return false;
         }
 

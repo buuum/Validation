@@ -73,6 +73,7 @@ $data = [
 * alpha_space
 * alpha_dash
 * alpha_numeric
+* alpha_numeric_space
 * numeric
 * integer
 
