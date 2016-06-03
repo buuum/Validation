@@ -76,6 +76,7 @@ $data = [
 * alpha_numeric_space
 * numeric
 * integer
+* euqals `equals:password2`
 
 ### USE VALIDATORS
 

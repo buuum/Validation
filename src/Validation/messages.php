@@ -26,5 +26,6 @@ return array(
     "alpha_numeric_sapce" => "The :attribute may only contain letters, numbers and spaces.",
     "numeric"             => "The :attribute must be a number.",
     "integer"             => "The :attribute must be an integer.",
+    "equals"              => "The :attribute not equal than :value.",
 
 );

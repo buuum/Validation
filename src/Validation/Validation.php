@@ -385,4 +385,22 @@ class Validation
         return true;
     }
 
+    /**
+     * @param $value
+     * @param $data
+     * @param $param
+     * @return bool
+     */
+    protected function validate_equals($value, $data, $param)
+    {
+        if (empty($data[$param[0]])) {
+            return false;
+        }
+        if ($data[$param[0]] != $value) {
+            return false;
+        }
+
+        return true;
+    }
+
 }
