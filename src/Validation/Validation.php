@@ -403,4 +403,34 @@ class Validation
         return true;
     }
 
+    /**
+     * @param $value
+     * @param $data
+     * @param $param
+     * @return bool
+     */
+    protected function validate_groupdate($value, $data, $param)
+    {
+        if (empty($data[$param[0]]) || empty($data[$param[1]]) || empty($data[$param[2]])) {
+            return false;
+        }
+
+        //$date = $data[$param[0]] . '-' . $data[$param[1]] . '-' . $data[$param[2]];
+        //$d = \DateTime::createFromFormat('Y-m-d', $date);
+        //return $d && ($d->format('Y-m-d') === $date || $d->format('Y-n-d') == $date || $d->format('Y-m-j') == $date || $d->format('Y-n-j') == $date);
+        return checkdate($data[$param[1]], $data[$param[2]], $data[$param[0]]);
+    }
+
+    /**
+     * @param $value
+     * @param $data
+     * @param $param
+     * @return bool
+     */
+    protected function validate_date($value, $data, $param)
+    {
+        $d = \DateTime::createFromFormat($param[0], $value);
+        return $d && ($d->format($param[0]) === $value);
+    }
+
 }

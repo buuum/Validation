@@ -77,19 +77,27 @@ $data = [
 * numeric
 * integer
 * euqals `equals:password2`
+* date `date:Y-m-d` date:formatdate
+* groupdate `groupdate:ano:mes:dia`
 
 ### USE VALIDATORS
 
 ```php
 $validator_rules = [
     'name' => 'required|max:20',
-    'email' => 'required|valid_email'
+    'email' => 'required|valid_email',
+    'date' => 'date:d/m/Y',
+    'dia'      => 'required|integer',
+    'mes'      => 'required|integer',
+    'ano'      => 'required|integer|groupdate:ano:mes:dia',
 ];
 
 $messages = [
-    '"required"      => "The :attribute is required",
+    "required"      => "The :attribute is required",
     "max"           => "The :attribute may not be greater than :value.",
     "valid_email"   => "The :attribute format is invalid.",
+    "date"          => "La fecha seleccionada es incorrecta.",
+    "groupdate"     => "La fecha seleccionada es incorrecta."
 ];
 
 $validator = new Validation($validator_rules, $messages);
