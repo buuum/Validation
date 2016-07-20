@@ -429,8 +429,9 @@ class Validation
      */
     protected function validate_date($value, $data, $param)
     {
-        $d = \DateTime::createFromFormat($param[0], $value);
-        return $d && ($d->format($param[0]) === $value);
+        $format = implode(':', $param);
+        $d = \DateTime::createFromFormat($format, $value);
+        return $d && ($d->format($format) === $value);
     }
 
 }
