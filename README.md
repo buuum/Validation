@@ -69,16 +69,26 @@ $data = [
 * max `max:23`
 * min `min:3`
 * exact_len `exact_len:5`
-* alpha
+* alpha  
 * alpha_space
 * alpha_dash
 * alpha_numeric
 * alpha_numeric_space
+* only_alpha  
+* only_alpha_space
+* only_alpha_dash
+* only_alpha_numeric
+* only_alpha_numeric_space
 * numeric
 * integer
 * euqals `equals:password2`
 * date `date:Y-m-d` date:formatdate
 * groupdate `groupdate:ano:mes:dia`
+
+####NOTE
+Group Alpha 
+with prefix only_ = a-z
+without prefix = a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿçÇñÑ
 
 ### USE VALIDATORS
 

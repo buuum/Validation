@@ -33,6 +33,11 @@ class Validation
     private $special = ['required'];
 
     /**
+     * @var string
+     */
+    private $alpha = 'a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿçÇñÑ';
+
+    /**
      * Validation constructor.
      * @param $rules
      * @param array|null $messages
@@ -56,19 +61,19 @@ class Validation
             foreach ($rules as $filter_function => $params) {
 
                 if (!isset($data[$name])) {
-                    if(array_key_exists('validate_required', $rules)){
+                    if (array_key_exists('validate_required', $rules)) {
                         $this->setError($filter_function, $name, $params);
                     }
                 } elseif (is_array($data[$name]) && !in_array($filter_function, $this->special)) {
                     foreach ($data[$name] as $key => $data_) {
-                        if(empty($data_) && !array_key_exists('validate_required', $rules)) {
-                        }elseif (!$value = call_user_func(array($this, $filter_function), $data_, $data, $params)) {
+                        if (empty($data_) && !array_key_exists('validate_required', $rules)) {
+                        } elseif (!$value = call_user_func(array($this, $filter_function), $data_, $data, $params)) {
                             $this->setError($filter_function, $name, $params, $key);
                         }
                     }
                 } else {
-                    if(empty($data[$name]) && !array_key_exists('validate_required', $rules)) {
-                    }elseif (!$value = call_user_func(array($this, $filter_function), $data[$name], $data, $params)) {
+                    if (empty($data[$name]) && !array_key_exists('validate_required', $rules)) {
+                    } elseif (!$value = call_user_func(array($this, $filter_function), $data[$name], $data, $params)) {
                         $this->setError($filter_function, $name, $params);
                     }
                 }
@@ -265,17 +270,18 @@ class Validation
 
     /**
      * @param $value
+     * @param $only
      * @return bool
      */
-    protected function validate_alpha($value)
+    protected function validate_alpha($value, $only = false)
     {
         if (empty($value)) {
             return false;
         }
 
-        if (!preg_match('/^([a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ])+$/i',
-                $value) !== false
-        ) {
+        $regex = ($only) ? 'a-z' : $this->alpha;
+
+        if (!preg_match('/^([' . $regex . '])+$/i', $value) !== false) {
             return false;
         }
 
@@ -286,13 +292,25 @@ class Validation
      * @param $value
      * @return bool
      */
-    protected function validate_alpha_space($value)
+    protected function validate_only_alpha($value)
+    {
+        return $this->validate_alpha($value, true);
+    }
+
+    /**
+     * @param $value
+     * @param $only
+     * @return bool
+     */
+    protected function validate_alpha_space($value, $only = false)
     {
         if (empty($value)) {
             return false;
         }
 
-        if (!preg_match("/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\s])+$/i", $value) !== false) {
+        $regex = ($only) ? 'a-z' : $this->alpha;
+
+        if (!preg_match("/^([" . $regex . "\s])+$/i", $value) !== false) {
             return false;
         }
 
@@ -303,13 +321,25 @@ class Validation
      * @param $value
      * @return bool
      */
-    protected function validate_alpha_dash($value)
+    protected function validate_only_alpha_space($value)
+    {
+        return $this->validate_alpha_space($value, true);
+    }
+
+    /**
+     * @param $value
+     * @param $only
+     * @return bool
+     */
+    protected function validate_alpha_dash($value, $only = false)
     {
         if (empty($value)) {
             return false;
         }
 
-        if (!preg_match('/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ_-])+$/i', $value) !== false) {
+        $regex = ($only) ? 'a-z' : $this->alpha;
+
+        if (!preg_match('/^([' . $regex . '_-])+$/i', $value) !== false) {
             return false;
         }
 
@@ -320,13 +350,25 @@ class Validation
      * @param $value
      * @return bool
      */
-    protected function validate_alpha_numeric($value)
+    protected function validate_only_alpha_dash($value)
+    {
+        return $this->validate_alpha_dash($value, true);
+    }
+
+    /**
+     * @param $value
+     * @param $only
+     * @return bool
+     */
+    protected function validate_alpha_numeric($value, $only = false)
     {
         if (empty($value)) {
             return false;
         }
 
-        if (!preg_match('/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ])+$/i', $value) !== false) {
+        $regex = ($only) ? 'a-z' : $this->alpha;
+
+        if (!preg_match('/^([0-9' . $regex . '])+$/i', $value) !== false) {
             return false;
         }
 
@@ -337,17 +379,38 @@ class Validation
      * @param $value
      * @return bool
      */
-    protected function validate_alpha_numeric_space($value)
+    protected function validate_only_alpha_numeric($value)
+    {
+        return $this->validate_alpha_numeric($value, true);
+    }
+
+    /**
+     * @param $value
+     * @param $only
+     * @return bool
+     */
+    protected function validate_alpha_numeric_space($value, $only = false)
     {
         if (empty($value)) {
             return false;
         }
 
-        if (!preg_match('/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\s])+$/i', $value) !== false) {
+        $regex = ($only) ? 'a-z' : $this->alpha;
+
+        if (!preg_match('/^([0-9' . $regex . '\s])+$/i', $value) !== false) {
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * @param $value
+     * @return bool
+     */
+    protected function validate_only_alpha_numeric_space($value)
+    {
+        return $this->validate_alpha_numeric_space($value, true);
     }
 
     /**
