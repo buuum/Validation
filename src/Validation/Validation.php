@@ -479,6 +479,23 @@ class Validation
 
     /**
      * @param $value
+     * @return bool
+     */
+    protected function validate_url($value)
+    {
+        if (empty($value)) {
+            return false;
+        }
+
+        if (filter_var($value, FILTER_VALIDATE_URL) === false) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $value
      * @param $data
      * @param $param
      * @return bool

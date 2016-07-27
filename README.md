@@ -86,6 +86,7 @@ $data = [
 * euqals `equals:password2`
 * date `date:Y-m-d` date:formatdate
 * groupdate `groupdate:ano:mes:dia`
+* url
 
 ####NOTE
 Group Alpha 
