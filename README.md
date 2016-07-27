@@ -74,11 +74,13 @@ $data = [
 * alpha_dash
 * alpha_numeric
 * alpha_numeric_space
+* alpha_numeric_dash
 * only_alpha  
 * only_alpha_space
 * only_alpha_dash
 * only_alpha_numeric
 * only_alpha_numeric_space
+* only_alpha_numeric_dash
 * numeric
 * integer
 * euqals `equals:password2`

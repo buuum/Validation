@@ -327,10 +327,10 @@ class Validation
     }
 
     /**
-     * @param $value
-     * @param $only
-     * @return bool
-     */
+ * @param $value
+ * @param $only
+ * @return bool
+ */
     protected function validate_alpha_dash($value, $only = false)
     {
         if (empty($value)) {
@@ -382,6 +382,35 @@ class Validation
     protected function validate_only_alpha_numeric($value)
     {
         return $this->validate_alpha_numeric($value, true);
+    }
+
+    /**
+     * @param $value
+     * @param $only
+     * @return bool
+     */
+    protected function validate_alpha_numeric_dash($value, $only = false)
+    {
+        if (empty($value)) {
+            return false;
+        }
+
+        $regex = ($only) ? 'a-z' : $this->alpha;
+
+        if (!preg_match('/^([0-9' . $regex . '_-])+$/i', $value) !== false) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $value
+     * @return bool
+     */
+    protected function validate_only_alpha_numeric_dash($value)
+    {
+        return $this->validate_alpha_numeric_dash($value, true);
     }
 
     /**
