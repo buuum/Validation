@@ -17,6 +17,10 @@ class Validation
     /**
      * @var array
      */
+    private $keyerrors = [];
+    /**
+     * @var array
+     */
     private $apply_rules = [];
     /**
      * @var array|mixed
@@ -106,9 +110,11 @@ class Validation
         }
 
         if (!is_null($key)) {
-            $this->errors[$name][$key][] = $error;
+            $this->errors[$alias][$key][] = $error;
+            $this->keyerrors[$name][$key][] = $error;
         } else {
-            $this->errors[$name][] = $error;
+            $this->errors[$alias][] = $error;
+            $this->keyerrors[$name][] = $error;
         }
         $this->error = true;
 
@@ -122,6 +128,21 @@ class Validation
         return $this->errors;
     }
 
+    /**
+     * @return array
+     */
+    public function getErrorsWithKey()
+    {
+        return $this->keyerrors;
+    }
+
+    /**
+     * @return array
+     */
+    public function getKeyErrors()
+    {
+        return array_keys($this->keyerrors);
+    }
 
     /**
      * @param $rules
