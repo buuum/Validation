@@ -139,7 +139,7 @@ class Validation
     /**
      * @return array
      */
-    public function getKeyErrors()
+    public function getErrorKeys()
     {
         return array_keys($this->keyerrors);
     }
