@@ -107,6 +107,7 @@ $validator_rules = [
 
 $messages = [
     "required"      => "The :attribute is required",
+    "required:email"      => "Email required",
     "max"           => "The :attribute may not be greater than :value.",
     "valid_email"   => "The :attribute format is invalid.",
     "date"          => "La fecha seleccionada es incorrecta.",

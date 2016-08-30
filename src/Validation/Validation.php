@@ -98,7 +98,11 @@ class Validation
     {
         $message_key = str_replace('validate_', '', $fname);
 
-        $error = $this->messages[$message_key];
+        if (!empty($this->messages[$message_key . ':' . $name])) {
+            $error = $this->messages[$message_key . ':' . $name];
+        } else {
+            $error = $this->messages[$message_key];
+        }
         if (is_array($error)) {
             $type = array_shift($value);
             $error = $error[$type];
@@ -348,10 +352,10 @@ class Validation
     }
 
     /**
- * @param $value
- * @param $only
- * @return bool
- */
+     * @param $value
+     * @param $only
+     * @return bool
+     */
     protected function validate_alpha_dash($value, $only = false)
     {
         if (empty($value)) {
