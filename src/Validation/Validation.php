@@ -474,10 +474,6 @@ class Validation
     protected function validate_numeric($value)
     {
 
-        if (empty($value)) {
-            return false;
-        }
-
         if (!is_numeric($value)) {
             return false;
         }
@@ -491,9 +487,6 @@ class Validation
      */
     protected function validate_integer($value)
     {
-        if (empty($value)) {
-            return false;
-        }
 
         if (filter_var($value, FILTER_VALIDATE_INT) === false) {
             return false;
