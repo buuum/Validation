@@ -55,8 +55,8 @@ class Filter
     protected function filter_values($key, $values)
     {
         $fiter_arr = [];
-        foreach ($values as $value) {
-            $fiter_arr[] = $this->filter_value($key, $value);
+        foreach ($values as $k => $value) {
+            $fiter_arr[$k] = $this->filter_value($key, $value);
         }
         return $fiter_arr;
     }
