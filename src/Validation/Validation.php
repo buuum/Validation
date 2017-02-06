@@ -302,7 +302,7 @@ class Validation
      * @param $only
      * @return bool
      */
-    protected function validate_alpha($value, $only = false)
+    protected function validate_alpha($value, $data, $only = false)
     {
         if (empty($value)) {
             return false;
@@ -323,7 +323,7 @@ class Validation
      */
     protected function validate_only_alpha($value)
     {
-        return $this->validate_alpha($value, true);
+        return $this->validate_alpha($value, [], true);
     }
 
     /**
@@ -331,7 +331,7 @@ class Validation
      * @param $only
      * @return bool
      */
-    protected function validate_alpha_space($value, $only = false)
+    protected function validate_alpha_space($value, $data, $only = false)
     {
         if (empty($value)) {
             return false;
@@ -352,7 +352,7 @@ class Validation
      */
     protected function validate_only_alpha_space($value)
     {
-        return $this->validate_alpha_space($value, true);
+        return $this->validate_alpha_space($value, [], true);
     }
 
     /**
@@ -360,7 +360,7 @@ class Validation
      * @param $only
      * @return bool
      */
-    protected function validate_alpha_dash($value, $only = false)
+    protected function validate_alpha_dash($value, $data, $only = false)
     {
         if (empty($value)) {
             return false;
@@ -381,7 +381,7 @@ class Validation
      */
     protected function validate_only_alpha_dash($value)
     {
-        return $this->validate_alpha_dash($value, true);
+        return $this->validate_alpha_dash($value, [], true);
     }
 
     /**
@@ -389,7 +389,7 @@ class Validation
      * @param $only
      * @return bool
      */
-    protected function validate_alpha_numeric($value, $only = false)
+    protected function validate_alpha_numeric($value, $data, $only = false)
     {
         if (empty($value)) {
             return false;
@@ -410,7 +410,7 @@ class Validation
      */
     protected function validate_only_alpha_numeric($value)
     {
-        return $this->validate_alpha_numeric($value, true);
+        return $this->validate_alpha_numeric($value, [], true);
     }
 
     /**
@@ -418,7 +418,7 @@ class Validation
      * @param $only
      * @return bool
      */
-    protected function validate_alpha_numeric_dash($value, $only = false)
+    protected function validate_alpha_numeric_dash($value, $data, $only = false)
     {
         if (empty($value)) {
             return false;
@@ -439,15 +439,16 @@ class Validation
      */
     protected function validate_only_alpha_numeric_dash($value)
     {
-        return $this->validate_alpha_numeric_dash($value, true);
+        return $this->validate_alpha_numeric_dash($value, [], true);
     }
 
     /**
      * @param $value
+     * @param $data
      * @param $only
      * @return bool
      */
-    protected function validate_alpha_numeric_space($value, $only = false)
+    protected function validate_alpha_numeric_space($value, $data, $only = false)
     {
         if (empty($value)) {
             return false;
@@ -468,7 +469,7 @@ class Validation
      */
     protected function validate_only_alpha_numeric_space($value)
     {
-        return $this->validate_alpha_numeric_space($value, true);
+        return $this->validate_alpha_numeric_space($value, [], true);
     }
 
     /**
