@@ -69,10 +69,14 @@ class Validation
                         $this->setError($filter_function, $name, $params);
                     }
                 } elseif (is_array($data[$name]) && !in_array($filter_function, $this->special)) {
-                    foreach ($data[$name] as $key => $data_) {
-                        if (empty($data_) && !array_key_exists('validate_required', $rules)) {
-                        } elseif (!$value = call_user_func(array($this, $filter_function), $data_, $data, $params)) {
-                            $this->setError($filter_function, $name, $params, $key);
+                    if (empty($data[$name]) && array_key_exists('validate_required', $rules)) {
+                        $this->setError($filter_function, $name, $params);
+                    }else{
+                        foreach ($data[$name] as $key => $data_) {
+                            if (empty($data_) && !array_key_exists('validate_required', $rules)) {
+                            } elseif (!$value = call_user_func(array($this, $filter_function), $data_, $data, $params)) {
+                                $this->setError($filter_function, $name, $params, $key);
+                            }
                         }
                     }
                 } else {
