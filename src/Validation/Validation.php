@@ -253,6 +253,32 @@ class Validation
 
     /**
      * @param $value
+     * @param $data
+     * @param $param
+     * @return bool
+     */
+    protected function validate_max_len($value, $data, $param)
+    {
+        if (function_exists('mb_strlen')) {
+            $value = mb_strlen($value);
+        } else {
+            $value = strlen($value);
+        }
+        return $value <= $param[0];
+    }
+
+    protected function validate_min_len($value, $data, $param)
+    {
+        if (function_exists('mb_strlen')) {
+            $value = mb_strlen($value);
+        } else {
+            $value = strlen($value);
+        }
+        return $value > $param[0];
+    }
+
+    /**
+     * @param $value
      * @return int
      */
     protected function getSize($value)

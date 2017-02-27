@@ -69,6 +69,8 @@ $data = [
 * max `max:23`
 * min `min:3`
 * exact_len `exact_len:5`
+* max_len `max_len:23`
+* min_len `min_len:3`
 * alpha  
 * alpha_space
 * alpha_dash
