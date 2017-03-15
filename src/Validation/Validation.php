@@ -47,10 +47,11 @@ class Validation
      * @param array|null $messages
      * @param null $alias
      */
-    public function __construct($rules, array $messages = null, $alias = null)
+    public function __construct($rules, array $messages = [], $alias = null)
     {
         $this->apply_rules = $this->parseRules($rules);
-        $this->messages = $messages ?: include __DIR__ . '/messages.php';
+        $default_messages = include __DIR__ . '/messages.php';
+        $this->messages = array_merge($default_messages, $messages);
         $this->alias = $alias;
     }
 
@@ -71,10 +72,12 @@ class Validation
                 } elseif (is_array($data[$name]) && !in_array($filter_function, $this->special)) {
                     if (empty($data[$name]) && array_key_exists('validate_required', $rules)) {
                         $this->setError($filter_function, $name, $params);
-                    }else{
+                    } else {
                         foreach ($data[$name] as $key => $data_) {
                             if (empty($data_) && !array_key_exists('validate_required', $rules)) {
-                            } elseif (!$value = call_user_func(array($this, $filter_function), $data_, $data, $params)) {
+                            } elseif (!$value = call_user_func(array($this, $filter_function), $data_, $data,
+                                $params)
+                            ) {
                                 $this->setError($filter_function, $name, $params, $key);
                             }
                         }
