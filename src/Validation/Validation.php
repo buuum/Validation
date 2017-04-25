@@ -18,6 +18,11 @@ class Validation
      * @var array
      */
     private $keyerrors = [];
+
+    /**
+     * @var array
+     */
+    private $explain_errors = [];
     /**
      * @var array
      */
@@ -106,16 +111,16 @@ class Validation
         $message_key = str_replace('validate_', '', $fname);
 
         if (!empty($this->messages[$message_key . ':' . $name])) {
-            $error = $this->messages[$message_key . ':' . $name];
+            $error_text = $this->messages[$message_key . ':' . $name];
         } else {
-            $error = $this->messages[$message_key];
+            $error_text = $this->messages[$message_key];
         }
-        if (is_array($error)) {
+        if (is_array($error_text)) {
             $type = array_shift($value);
-            $error = $error[$type];
+            $error_text = $error_text[$type];
         }
         $alias = (!empty($this->alias[$name])) ? $this->alias[$name] : $name;
-        $error = str_replace(':attribute', $alias, $error);
+        $error = str_replace(':attribute', $alias, $error_text);
         if ($value) {
             $error = str_replace(':value', implode(',', $value), $error);
         }
@@ -127,8 +132,42 @@ class Validation
             $this->errors[$alias][] = $error;
             $this->keyerrors[$name][] = $error;
         }
+
+        $this->setExplainErrors($name, $alias, $error_text, $value, $key);
         $this->error = true;
 
+    }
+
+    protected function setExplainErrors($name, $alias, $error_text, $value, $key)
+    {
+
+        $key_name = $name;
+        $key_name .= (!is_null($key)) ? $key : '';
+
+        $error = [
+            'text'  => $error_text,
+            'value' => $value
+        ];
+
+        if (!empty($this->explain_errors[$key_name])) {
+            $this->explain_errors[$key_name]['errors'][] = $error;
+        } else {
+            $this->explain_errors[$key_name] = [
+                'alias'      => $alias,
+                'input_name' => $name,
+                'key'        => $key,
+                'errors'     => [$error]
+            ];
+        }
+
+    }
+
+    /**
+     * @return array
+     */
+    public function getParseErrors()
+    {
+        return $this->errors;
     }
 
     /**
@@ -136,7 +175,7 @@ class Validation
      */
     public function getErrors()
     {
-        return $this->errors;
+        return $this->explain_errors;
     }
 
     /**

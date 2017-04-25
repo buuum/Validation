@@ -52,7 +52,7 @@ $data = [
 ];
 $filter = new Filter($filter_rules);
 
-$data = $fitler->filter($data);
+$data = $filter->filter($data);
 
 // output
 $data = [
@@ -123,23 +123,59 @@ $data = [
     'email' => ''
 ];
 
-$errors = $validator->validate($data);
+$validator->validate($data);
+
+$errors = $validator->getErrors();
 
 //outpur errors
 
-Array
-(
-    [name] => Array
-        (
-            [0] => The name is required
-        )
-        
-    [email] => Array
-        (
-            [0] => The email is required
-            [1] => The email format is invalid.
-        )
-);
+array(2) {
+  ["name"]=>
+  array(4) {
+    ["alias"]=>
+    string(4) "name"
+    ["input_name"]=>
+    string(4) "name"
+    ["key"]=>
+    NULL
+    ["errors"]=>
+    array(1) {
+      [0]=>
+      array(2) {
+        ["text"]=>
+        string(26) "The :attribute is required"
+        ["value"]=>
+        NULL
+      }
+    }
+  }
+  ["email"]=>
+  array(4) {
+    ["alias"]=>
+    string(5) "email"
+    ["input_name"]=>
+    string(5) "email"
+    ["key"]=>
+    NULL
+    ["errors"]=>
+    array(2) {
+      [0]=>
+      array(2) {
+        ["text"]=>
+        string(14) "Email required"
+        ["value"]=>
+        NULL
+      }
+      [1]=>
+      array(2) {
+        ["text"]=>
+        string(33) "The :attribute format is invalid."
+        ["value"]=>
+        NULL
+      }
+    }
+  }
+ }
 
 ```
 
