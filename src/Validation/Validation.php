@@ -316,7 +316,7 @@ class Validation
         } else {
             $value = strlen($value);
         }
-        return $value > $param[0];
+        return $value >= $param[0];
     }
 
     /**
@@ -346,7 +346,7 @@ class Validation
      */
     protected function validate_min($value, $data, $param)
     {
-        return $this->getSize($value) > $param[0];
+        return $this->getSize($value) >= $param[0];
     }
 
     /**
