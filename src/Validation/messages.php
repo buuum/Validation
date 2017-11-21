@@ -1,5 +1,15 @@
 <?php
 
+namespace Messages;
+
+use Buuum\Validations\ValidContains;
+use Buuum\Validations\ValidEmail;
+use Buuum\Validations\ValidExact;
+use Buuum\Validations\ValidMax;
+use Buuum\Validations\ValidMin;
+use Buuum\Validations\ValidRequired;
+use Buuum\Validations\ValidUrl;
+
 return array(
 
     /*
@@ -13,14 +23,16 @@ return array(
     |
     */
 
-    "required"                 => "The :attribute is required",
-    "contains"                 => "The :attribute value must be :value",
-    "max"                      => "The :attribute may not be greater than :value.",
-    "min"                      => "The :attribute must be at least :value.",
+    ValidRequired::class       => "The :attribute is required",
+    ValidUrl::class            => "The :attribute value must be :value",
+    ValidMax::class            => "The :attribute may not be greater than :value.",
+    ValidMin::class            => "The :attribute must be at least :value.",
+    ValidContains::class       => "The :attribute must be :value.",
+    ValidExact::class          => "The :attribute must be exact :value.",
     "exact_len"                => "The :attribute len must be :value",
     "max_len"                  => "The :attribute may not be greater than :value.",
     "min_len"                  => "The :attribute must be at least :value.",
-    "valid_email"              => "The :attribute format is invalid.",
+    ValidEmail::class          => "The :attribute format is invalid.",
     "alpha"                    => "The :attribute may only contain letters.",
     "only_alpha"               => "The :attribute may only contain letters.",
     "alpha_space"              => "The :attribute may only contain letters and spaces.",
