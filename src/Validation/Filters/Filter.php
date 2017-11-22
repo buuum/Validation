@@ -1,6 +1,6 @@
 <?php
 
-namespace Buuum\Filters;
+namespace RequestCheck\Filters;
 
 
 interface Filter

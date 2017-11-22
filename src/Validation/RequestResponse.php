@@ -1,9 +1,9 @@
 <?php
 
-namespace Buuum;
+namespace RequestCheck;
 
-use Buuum\Fields\FieldError;
-use Buuum\Validations\AbstractValidation;
+use RequestCheck\Fields\FieldError;
+use RequestCheck\Validations\AbstractValidation;
 
 class RequestResponse
 {

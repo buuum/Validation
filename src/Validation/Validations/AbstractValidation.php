@@ -1,9 +1,9 @@
 <?php
 
-namespace Buuum\Validations;
+namespace RequestCheck\Validations;
 
 
-use Buuum\Fields\FieldError;
+use RequestCheck\Fields\FieldError;
 
 abstract class AbstractValidation implements Validation
 {

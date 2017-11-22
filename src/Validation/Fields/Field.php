@@ -1,8 +1,8 @@
 <?php
 
-namespace Buuum\Fields;
+namespace RequestCheck\Fields;
 
-use Buuum\Validations\ValidRequired;
+use RequestCheck\Validations\ValidRequired;
 
 class Field
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Buuum;
+namespace RequestCheck;
 
-use Buuum\Fields\FieldsCollection;
+use RequestCheck\Fields\FieldsCollection;
 
 class RequestCheck
 {

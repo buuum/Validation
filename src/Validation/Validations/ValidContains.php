@@ -1,6 +1,6 @@
 <?php
 
-namespace Buuum\Validations;
+namespace RequestCheck\Validations;
 
 
 class ValidContains extends AbstractValidation

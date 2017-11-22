@@ -1,7 +1,6 @@
 <?php
 
-namespace Buuum\Validations;
-
+namespace RequestCheck\Validations;
 
 class ValidUrl extends AbstractValidation
 {

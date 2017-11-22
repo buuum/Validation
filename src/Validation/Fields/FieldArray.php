@@ -1,6 +1,6 @@
 <?php
 
-namespace Buuum\Fields;
+namespace RequestCheck\Fields;
 
 class FieldArray extends Field
 {

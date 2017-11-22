@@ -16,7 +16,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "Buuum\\": "src/Validation"
+      "RequestCheck\\": "src/Validation"
     }
   },
   "require": {

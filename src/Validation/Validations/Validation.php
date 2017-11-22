@@ -1,6 +1,6 @@
 <?php
 
-namespace Buuum\Validations;
+namespace RequestCheck\Validations;
 
 interface Validation
 {
