@@ -23,7 +23,7 @@ class RequestResponse
         $this->errors[] = $fieldError;
     }
 
-    public function parseError(AbstractValidation $validation, FieldError $fieldError)
+    public function parseError(AbstractValidation $validation, FieldError $fieldError): string
     {
         $classname = get_class($validation);
         $message = self::DEFAULT_MESSAGE;
@@ -34,12 +34,12 @@ class RequestResponse
         return $classname;
     }
 
-    public function isValid()
+    public function isValid(): bool
     {
         return empty($this->errors);
     }
 
-    public function getErrors()
+    public function getErrors(): array
     {
         return $this->errors;
     }

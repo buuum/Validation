@@ -32,7 +32,7 @@ class Field
         return $this;
     }
 
-    public function filter($data)
+    public function filter($data): array
     {
         if (isset($data[$this->name]) && (!empty($data[$this->name]) || is_numeric($data[$this->name]))) {
             if ($this->is_array) {
@@ -63,7 +63,7 @@ class Field
         return $data;
     }
 
-    public function validate($data)
+    public function validate($data): bool
     {
         $this->errors_class = new FieldError($this->name, $this->alias());
         $errors = false;
