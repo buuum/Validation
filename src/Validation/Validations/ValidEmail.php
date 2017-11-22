@@ -14,4 +14,5 @@ class ValidEmail extends AbstractValidation
 
         return true;
     }
+
 }

@@ -6,11 +6,12 @@ namespace Buuum\Validations;
 class ValidMin extends AbstractValidation
 {
 
-    private $value;
+    public $value;
 
-    public function __construct($value)
+    public function __construct($value, $message = false)
     {
         $this->value = $value;
+        parent::__construct($message);
     }
 
     public function validate($value)
@@ -18,23 +19,4 @@ class ValidMin extends AbstractValidation
         return $this->getSize($value) >= $this->value;
     }
 
-    public function getError()
-    {
-        return self::class . ":{$this->value}";
-    }
-
-    protected function getSize($value)
-    {
-        if (is_numeric($value)) {
-            return $value;
-        } elseif (is_array($value)) {
-            return count($value);
-        } else {
-            if (function_exists('mb_strlen')) {
-                return mb_strlen($value);
-            } else {
-                return strlen($value);
-            }
-        }
-    }
 }

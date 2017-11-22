@@ -9,11 +9,11 @@ class Field
     protected $name;
     protected $filters = [];
     protected $validations = [];
-    protected $errors = [];
     protected $sub_types = [];
     protected $is_array = false;
     protected $validations_array = [];
     protected $alias;
+    protected $errors_class;
 
     public function __construct($name)
     {
@@ -65,7 +65,8 @@ class Field
 
     public function validate($data)
     {
-        $this->errors = [];
+        $this->errors_class = new FieldError($this->name, $this->alias());
+        $errors = false;
 
         if (isset($data[$this->name]) && (!empty($data[$this->name]) || is_numeric($data[$this->name]))) {
             if ($this->is_array) {
@@ -73,9 +74,8 @@ class Field
                 if (!empty($this->validations_array)) {
                     foreach ($this->validations_array as $validation) {
                         if (!$validation->validate($data[$this->name])) {
-                            $this->errors[$this->name]['_field_name'] = $this->name;
-                            $this->errors[$this->name]['_alias'] = $this->alias();
-                            $this->errors[$this->name]['_errors'][] = $this->parseError($validation->getError());
+                            $this->errors_class->addError($validation);
+                            $errors = true;
                         }
                     }
                 }
@@ -83,51 +83,41 @@ class Field
                 if (!empty($this->sub_types)) {
 
                     foreach ($data[$this->name] as $k => $value) {
-                        $errors = [];
+                        $error = new FieldError($this->name, $this->alias(), $k);
                         foreach ($this->sub_types as $type) {
                             if (!$type->validate($data[$this->name][$k])) {
-                                $errors += $type->getErrors();
+                                $error->addSubfield($type->getErrors());
+                                $errors = true;
                             }
                         }
-                        $this->errors[$this->name]['_alias'] = $this->name;
-                        $this->errors[$this->name]['_field_name'] = $this->alias();
-                        $this->errors[$this->name]['_fields'][$this->name . '.' . $k]['_field_name'] = $this->name;
-                        $this->errors[$this->name]['_fields'][$this->name . '.' . $k]['_alias'] = $this->alias($k);
-                        $this->errors[$this->name]['_fields'][$this->name . '.' . $k]['_fields'] = $errors;
+                        $this->errors_class->addSubfield($error);
                     }
 
                 } else {
                     foreach ($data[$this->name] as $k => $value) {
+                        $error = new FieldError($this->name, $this->alias(), $k);
                         foreach ($this->validations as $validation) {
                             if (!$validation->validate($value)) {
-                                $this->errors[$this->name]['_alias'] = $this->name;
-                                $this->errors[$this->name]['_field_name'] = $this->alias();
-                                $this->errors[$this->name]['_fields'][$this->name . '.' . $k]['_field_name'] = $this->name;
-                                $this->errors[$this->name]['_fields'][$this->name . '.' . $k]['_alias'] = $this->alias($k);
-                                $this->errors[$this->name]['_fields'][$this->name . '.' . $k]['_errors'][] = $this->parseError($validation->getError());
+                                $error->addError($validation);
+                                $errors = true;
                             }
                         }
+                        $this->errors_class->addSubfield($error);
                     }
                 }
 
             } elseif (!empty($this->sub_types)) {
-                $errors = [];
                 foreach ($this->sub_types as $type) {
                     if (!$type->validate($data[$this->name])) {
-                        $errors += $type->getErrors();
+                        $this->errors_class->addSubfield($type->getErrors());
+                        $errors = true;
                     }
-                }
-                if (!empty($errors)) {
-                    $this->errors[$this->name]['_field_name'] = $this->name;
-                    $this->errors[$this->name]['_alias'] = $this->alias();
-                    $this->errors[$this->name]['_fields'] = $errors;
                 }
             } else {
                 foreach ($this->validations as $validation) {
                     if (!$validation->validate($data[$this->name])) {
-                        $this->errors[$this->name]['_field_name'] = $this->name;
-                        $this->errors[$this->name]['_alias'] = $this->alias();
-                        $this->errors[$this->name]['_errors'][] = $this->parseError($validation->getError());
+                        $this->errors_class->addError($validation);
+                        $errors = true;
                     }
                 }
             }
@@ -135,19 +125,13 @@ class Field
         } else {
             foreach ($this->validations as $validation) {
                 if ($validation instanceof ValidRequired) {
-                    $this->errors[$this->name]['_field_name'] = $this->name;
-                    $this->errors[$this->name]['_alias'] = $this->alias();
-                    $this->errors[$this->name]['_errors'][] = $this->parseError($validation->getError());
+                    $this->errors_class->addError($validation);
+                    $errors = true;
                 }
             }
         }
 
-        return empty($this->errors);
-    }
-
-    protected function parseError($error)
-    {
-        return "$error:{$this->name}:{$this->alias()}";
+        return !$errors;
     }
 
     protected function types()
@@ -173,17 +157,13 @@ class Field
         return $this;
     }
 
-    protected function alias($position = false)
+    protected function alias()
     {
-        $alias = $this->alias ? $this->alias : $this->name;
-        if ($position !== false) {
-            $alias .= ' ' . ($position + 1);
-        }
-        return $alias;
+        return $this->alias ? $this->alias : $this->name;
     }
 
     public function getErrors()
     {
-        return $this->errors;
+        return $this->errors_class;
     }
 }

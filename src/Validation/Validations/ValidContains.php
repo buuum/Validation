@@ -6,11 +6,12 @@ namespace Buuum\Validations;
 class ValidContains extends AbstractValidation
 {
 
-    private $words;
+    public $words;
 
-    public function __construct($words)
+    public function __construct(array $words, $message = false)
     {
         $this->words = $words;
+        parent::__construct($message);
     }
 
     public function validate($value)
@@ -28,9 +29,11 @@ class ValidContains extends AbstractValidation
         return true;
     }
 
-    public function getError()
+    public function getVars()
     {
-        $words = implode(',', $this->words);
-        return self::class . ":$words";
+        $words = implode(', ', $this->words);
+        return [
+            'words' => $words
+        ];
     }
 }
