@@ -22,169 +22,265 @@ composer require buuum/requestcheck
 
 You may use your own autoloader as long as it follows PSR-0 or PSR-4 standards. Just put src directory contents in your vendor directory.
 
+### INPUT FIELDS
+
+#### INPUT
+```php
+$name = new Input('name');
+$name->setFilters([new FilterTrim()]);
+$name->setValidations([new ValidRequired()]);
+```
+#### INPUTOBJECT
+```php
+$name = new Input('name');
+$name->setFilters([new FilterTrim()]);
+$name->setValidations([new ValidRequired()]);
+
+$url = new Input('url');
+$url->setValidations([new ValidRequired()]);
+
+$imageobject = new InputObject('image', new InputCollection([$name, $url]));
+$imageobject->setValidations([new ValidRequired()]);
+
+```
+#### INPUTARRAY
+```php
+
+// Simple Array
+$url = new Input('url');
+$url->setValidations([new ValidRequired()]);
+
+$urls = new InputArray('urls', $url);
+$urls->setValidations([new ValidRequired()]);
+
+// Array objects
+...
+$images = new InputArray('urls', $imageobject);
+
+// Array arrays
+...
+$images_array = new InputArray('images_array', $images);
+```
+
+### HOW TO USE
+```php
+$data = [
+    'name'        => '   dr  r rwe wed   ',
+    'url'         => ' url',
+];
+$fields = [$name, $url];
+$request = new RequestCheck($data, new InputCollection($fields));
+
+// return data filtered 
+$data_filtered = $request->filter();
+
+// return RequestResponse
+$response = $request->validate();
+
+if($response->isValid()){
+    // no errors
+}else{
+    var_dump($response->getErrors());
+}
+```
 
 ### FILTERS
 
-* trim `Strip whitespace from the beginning and end of a string`
-* sanitize_string `Strip tags`
-* sanitize_email `Remove all characters except letters, digits and !#$%&'*+-=?^_{|}~@.[].`
-* rmpunctuation `Remove all known punctuation characters from a string`
-* urlencode `Encode url entities`
-* htmlencode `Encode HTML entities`
-* sanitize_numbers `Remove any non-numeric characters`
-* tags `Remove all layout orientated HTML tags from text. Leaving only basic tags`
-* custom_tags `Remove HTML tags except declared`
-* attributes `Remove all attributes tags`
-* whole_number `Ensure that the provided numeric value is represented as a whole number`
- 
-### USE FILTER
-
+#### Attributes
+remove all attributes
 ```php
+...
+$name->setFilters([new FilterAttributes()]);
+```
 
-$filter_rules = [
-    'name'  => 'trim|sanitize_string',
-    'email' => 'trim|sanitize_email',
-];
+#### Custom Tags
+remove custom tags
+- param1: allow tags 
+```php
+...
+$name->setFilters([new FilterCustomTags('<p><a>')]);
+```
 
-$data = [
-    'name' => ' name ',
-    'email' => ' (email@email.com) '
-];
-$filter = new Filter($filter_rules);
+#### Email
+return filter email
+```php
+...
+$name->setFilters([new FilterEmail()]);
+```
 
-$data = $filter->filter($data);
+#### HtmlEncode
+return htmlencode data
+```php
+...
+$name->setFilters([new FilterHtmlEncode()]);
+```
 
-// output
-$data = [
-    'name' => 'name',
-    'email' => 'email@email.com'
-];
+#### RemovePunctuation
+remove punctuation
+```php
+...
+$name->setFilters([new FilterRemovePunctuation()]);
+```
+
+#### Sanitize Number
+sanitize number data
+```php
+...
+$name->setFilters([new FilterSanitizeNumber()]);
+```
+
+#### String
+sanitize string data
+```php
+...
+$name->setFilters([new FilterString()]);
+```
+
+#### Trim
+trim data
+```php
+...
+$name->setFilters([new FilterTrim()]);
+```
+
+#### UrlEncode
+encode url
+```php
+...
+$name->setFilters([new FilterUrlEncode()]);
+```
+
+#### Whole Number
+whole number
+```php
+...
+$name->setFilters([new FilterWholeNumber()]);
+```
+
+### Create custom filter
+```php
+class FilterLetter implements Filter
+{
+    
+    protected $letter;
+    
+    public function __construct($letter)
+    {
+        $this->letter = $letter;
+    }
+
+    public function filter($data)
+    {
+        return str_replace($this->letter,'', $data);
+    }
+}
+...
+$name->setFilters([new FilterLetter('a')]);
 ```
  
 ## VALIDATORS
 
-* required
-* contains `contains:word1:word2`
-* valid_email
-* max `max:23`
-* min `min:3`
-* exact_len `exact_len:5`
-* max_len `max_len:23`
-* min_len `min_len:3`
-* alpha  
-* alpha_space
-* alpha_dash
-* alpha_numeric
-* alpha_numeric_space
-* alpha_numeric_dash
-* only_alpha  
-* only_alpha_space
-* only_alpha_dash
-* only_alpha_numeric
-* only_alpha_numeric_space
-* only_alpha_numeric_dash
-* numeric
-* integer
-* euqals `equals:password2`
-* date `date:Y-m-d` date:formatdate
-* groupdate `groupdate:ano:mes:dia`
-* url
-
-####NOTE
-Group Alpha 
-with prefix only_ = a-z
-without prefix = a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿçÇñÑ
-
-### USE VALIDATORS
-
+### REQUIRED
+Check if input exists
+- param1: string (custom message)
 ```php
-$validator_rules = [
-    'name' => 'required|max:20',
-    'email' => 'required|valid_email',
-    'date' => 'date:d/m/Y',
-    'dia'      => 'required|integer',
-    'mes'      => 'required|integer',
-    'ano'      => 'required|integer|groupdate:ano:mes:dia',
-];
-
-$messages = [
-    "required"      => "The :attribute is required",
-    "required:email"      => "Email required",
-    "max"           => "The :attribute may not be greater than :value.",
-    "valid_email"   => "The :attribute format is invalid.",
-    "date"          => "La fecha seleccionada es incorrecta.",
-    "groupdate"     => "La fecha seleccionada es incorrecta."
-];
-
-$validator = new Validation($validator_rules, $messages);
-
-$data = [
-    'name' => '',
-    'email' => ''
-];
-
-$validator->validate($data);
-
-$errors = $validator->getErrors();
-
-//outpur errors
-
-array(2) {
-  ["name"]=>
-  array(4) {
-    ["alias"]=>
-    string(4) "name"
-    ["input_name"]=>
-    string(4) "name"
-    ["key"]=>
-    NULL
-    ["errors"]=>
-    array(1) {
-      [0]=>
-      array(2) {
-        ["text"]=>
-        string(26) "The :attribute is required"
-        ["value"]=>
-        NULL
-      }
-    }
-  }
-  ["email"]=>
-  array(4) {
-    ["alias"]=>
-    string(5) "email"
-    ["input_name"]=>
-    string(5) "email"
-    ["key"]=>
-    NULL
-    ["errors"]=>
-    array(2) {
-      [0]=>
-      array(2) {
-        ["text"]=>
-        string(14) "Email required"
-        ["value"]=>
-        NULL
-      }
-      [1]=>
-      array(2) {
-        ["text"]=>
-        string(33) "The :attribute format is invalid."
-        ["value"]=>
-        NULL
-      }
-    }
-  }
- }
-
+...
+$name->setValidations([new ValidRequired()]);
 ```
 
- 
+### Email
+Check if input is a valid email
+- param1: string (custom message)
+```php
+...
+$name->setValidations([new ValidEmail()]);
+
+### Integer
+Check if input is a valid integer
+- param1: string (custom message)
+```php
+...
+$name->setValidations([new ValidInteger()]);
+```
+
+### Exact
+Check if input value is exact to value
+- param1: int value to exact
+- param2: string (custom message)
+```php
+...
+$name->setValidations([new ValidExact(34)]);
+```
+
+### MAX
+Check if input value is max
+- param1: int value max
+- param2: string (custom message)
+```php
+...
+$name->setValidations([new ValidExact(34)]);
+```
+
+### MIN
+Check if input value is min
+- param1: int value min
+- param2: string (custom message)
+```php
+...
+$name->setValidations([new ValidMin(34)]);
+```
+
+
+### REGEX
+Check if input is valid with regex
+- param1: string regex
+- param2: string (custom message)
+##### PREDEFINE REGEXS:
+- NUMERIC
+- ALPHA
+- ALPHA_NUMERIC
+- ALPHA_SPACE
+- ALPHA_NUMERIC_SPACE
+- SLUG
+
+```php
+...
+$name->setValidations([new ValidRegex(ValidRegex::NUMERIC)]);
+```
+
+### URL
+Check if input is valid url
+- param1: string (custom message)
+```php
+...
+$name->setValidations([new ValiUrl(34)]);
+```
+
+### Contains
+Check if string contains any value of array
+- param1: array
+- param2: string (custom message)
+```php
+...
+$words = ['blue', 'yellow'];
+$name->setValidations([new ValidContains($words)]);
+```
+
+### Date
+Check if input is a valid date
+- param1: string date format
+- param2: string (custom message)
+```php
+...
+$format = 'Y/m/d';
+$name->setValidations([new ValidDate($format)]);
+```
+
 ## LICENSE
 
 The MIT License (MIT)
 
-Copyright (c) 2016
+Copyright (c) 2017
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

@@ -1,16 +1,16 @@
 <?php
 
-namespace Messages;
+namespace Errors;
 
-use Buuum\Validations\ValidContains;
-use Buuum\Validations\ValidEmail;
-use Buuum\Validations\ValidExact;
-use Buuum\Validations\ValidMax;
-use Buuum\Validations\ValidMin;
-use Buuum\Validations\ValidRequired;
-use Buuum\Validations\ValidUrl;
+use RequestCheck\Validations\ValidContains;
+use RequestCheck\Validations\ValidEmail;
+use RequestCheck\Validations\ValidExact;
+use RequestCheck\Validations\ValidMax;
+use RequestCheck\Validations\ValidMin;
+use RequestCheck\Validations\ValidRequired;
+use RequestCheck\Validations\ValidUrl;
 
-return array(
+return [
 
     /*
     |--------------------------------------------------------------------------
@@ -23,9 +23,8 @@ return array(
     |
     */
 
-
     ValidRequired::class       => "The :attribute is required",
-    ValidUrl::class            => "The :attribute value must be :value",
+    ValidUrl::class            => "The :attribute value must be valid url",
     ValidMax::class            => "The :attribute may not be greater than :value.",
     ValidMin::class            => "The :attribute must be at least :value.",
     ValidContains::class       => "The :attribute must be :value.",
@@ -53,4 +52,4 @@ return array(
     "groupdate"                => "The :attribute format is invalid.",
     "url"                      => "The :attribute format is invalid."
 
-);
+];
