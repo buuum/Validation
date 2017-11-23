@@ -6,32 +6,32 @@ use Countable;
 use IteratorAggregate;
 use ArrayIterator;
 
-class FieldsCollection implements Countable, IteratorAggregate
+class InputCollection implements Countable, IteratorAggregate
 {
 
     /**
-     * @var Field []
+     * @var InterfaceInput []
      */
     private $elements;
 
     public function __construct(array $elements = [])
     {
         foreach ($elements as $element) {
-            if (!$element instanceof Field) {
-                throw new \Exception('All elements must be Field class');
+            if (!$element instanceof InterfaceInput) {
+                throw new \Exception('All elements must implements InterfaceInput');
             }
         }
         $this->elements = $elements;
     }
 
-    public function add(Field $element)
+    public function add(InterfaceInput $element)
     {
         $this->elements[] = $element;
 
         return true;
     }
 
-    public function remove(Field $element)
+    public function remove(InterfaceInput $element)
     {
         foreach ($this->elements as $k => $el) {
             if ($el == $element) {

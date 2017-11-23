@@ -2,12 +2,8 @@
 
 namespace RequestCheck\Validations;
 
-
-use RequestCheck\Fields\FieldError;
-
 abstract class AbstractValidation implements Validation
 {
-
     protected $message;
 
     public function __construct($message = false)
@@ -22,15 +18,11 @@ abstract class AbstractValidation implements Validation
 
     public function getVars()
     {
-        $vars = get_object_vars($this);
-        return array_values($vars);
+        return [];
     }
 
-    public function error(FieldError $fieldError, $message)
+    public function error($fieldError)
     {
-        if ($this->message()) {
-            $message = $this->message();
-        }
 
         $message = str_replace([':attribute', ':fieldname'], [$fieldError->alias(), $fieldError->name()], $message);
         $message = str_replace([':value', ':value2', ':value3', ':value4', ':value5'], $this->getVars(), $message);

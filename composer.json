@@ -1,5 +1,5 @@
 {
-  "name": "buuum/validation",
+  "name": "buuum/requestcheck",
   "type": "library",
   "description": "Filter and Validation data",
   "homepage": "https://github.com/buuum/Validation",
@@ -20,7 +20,7 @@
     }
   },
   "require": {
-    "php": ">=5.5.0"
+    "php": ">=7.1.0"
   },
   "require-dev": {
     "phpunit/phpunit": "*"

@@ -1,21 +1,21 @@
 Filter and Validation data input
 ================================
 
-[![Packagist](https://img.shields.io/packagist/v/buuum/validation.svg)](https://packagist.org/packages/buuum/validation)
+[![Packagist](https://img.shields.io/packagist/v/buuum/requestcheck.svg)](https://packagist.org/packages/buuum/requestcheck)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](#license)
 
 ## Install
 
 ### System Requirements
 
-You need PHP >= 5.5.0 to use Buuum\validation but the latest stable version of PHP is recommended.
+You need PHP >= 7.1.0 to use Buuum\RequestCheck but the latest stable version of PHP is recommended.
 
 ### Composer
 
-Buuum\validation is available on Packagist and can be installed using Composer:
+Buuum\RequestCheck is available on Packagist and can be installed using Composer:
 
 ```
-composer require buuum/validation
+composer require buuum/requestcheck
 ```
 
 ### Manually

@@ -18,4 +18,11 @@ class ValidExact extends AbstractValidation
     {
         return $this->getSize($value) == $this->value;
     }
+
+    public function getVars()
+    {
+        return [
+            'value' => $this->value
+        ];
+    }
 }
